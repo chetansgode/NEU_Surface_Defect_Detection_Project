@@ -1,0 +1,12 @@
+
+tensorflow==2.21.0
+numpy
+pandas
+opencv-python
+Pillow
+
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic 
+
