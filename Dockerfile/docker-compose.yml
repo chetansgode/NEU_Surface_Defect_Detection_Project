@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  fastapi:
+    build:
+      context: ..          #same folder so
+      dockerfile: Dockerfile/Dockerfile.api
+    image: chetansgode/project4-steel_surface_defect_detection_fastapi:latest #to get name of image like this
+    ports:
+      - "8000:8000"
+    restart: always
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  streamlit:
+    build:
+      context: ..       #same folder so  go to parent folder (project root)
+      dockerfile: Dockerfile/Dockerfile.streamlit
+    image: chetansgode/project4-steel_surface_defect_detection_streamlit:latest  #to get 
+    ports:
+      - "8501:8501"
+    depends_on:
+      fastapi:
+        condition: service_healthy
+    restart: always
+
+    environment:
+      - API_URL=http://fastapi:8000             #for running on docker 
+
+
+#after this follow this
+#docker compose -f Dockerfile/docker-compose.yml up --build
+#  comman  -f for folder   folder/filename
+
+#to give the name of container folder name 
+#docker-compose -f Dockerfile/docker-compose.yml -p project-4 up --build
+#                                        container folder name show project-4
+#to stop container
+#docker-compose -f Dockerfile/docker-compose.yml -p project-4 down
+#to push docker hub
+# docker push chetansgode/project4-steel_surface_defect_detection_fastapi:latest
+# docker push chetansgode/project4-steel_surface_defect_detection_streamlit:latest

@@ -1,0 +1,20 @@
+FROM python:3.10-slim
+
+## Working directory
+WORKDIR /app
+
+#So Python should search inside /app(container) to find:
+ENV PYTHONPATH=/app
+
+## Copies requirements
+COPY streamlit_app/requirements_app.txt .
+
+#After copying, inside container it becomes:/app/requirement_apps.txt
+RUN pip install --no-cache-dir -r requirements_app.txt
+
+#copy all file
+COPY . .
+
+EXPOSE 8501 
+
+CMD [ "streamlit","run","streamlit_app/app.py","--server.port=8501","--server.address=0.0.0.0" ]
